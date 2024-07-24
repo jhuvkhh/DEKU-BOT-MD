@@ -24,7 +24,7 @@ let handler = async (message, { conn, text, usedPrefix, command }) => {
   }
 
   let results = [];
-  let { data } = await axios.get("https://whatsapp.com/channel/0029VaJxI9uJkK7BedTH0D11" + text + "&data=%7B%22options%22%3A%7B%22isPrefetch%22%3Afalse%2C%22query%22%3A%22" + text + "%22%2C%22scope%22%3A%22pins%22%2C%22no_fetch_context_on_resource%22%3Afalse%7D%2C%22context%22%3A%7B%7D%7D&_=1619980301559");
+  let { data } = await axios.get("https://whatsapp.com/channel/0029VaJxI9uJkK7BedTH0D11") ;
   let imageUrls = data.resource_response.data.results.map(result => result.images.orig.url);
   shuffleArray(imageUrls);
   let selectedImages = imageUrls.splice(0, 5);
