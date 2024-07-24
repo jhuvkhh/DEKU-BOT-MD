@@ -8,7 +8,7 @@ const {
 
 let handler = async (message, { conn, text, usedPrefix, command }) => {
   if (!text) {
-    return conn.reply(message.chat, "[❗] *¿النص فين يسطا \n ادخل نصا لاستطيع البحث في تطبيق بنترست?*", message);
+    return conn.reply(message.chat, "[❗] *¿النص فين يسطا \n  🙂ادخل نصا لاستطيع البحث في تطبيق بنترست?*", message);
   }
   
   async function generateImageMessage(url) {
