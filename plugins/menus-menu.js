@@ -207,7 +207,7 @@ ${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')
   ├❧ _${usedPrefix}wallpaper *<txt>*_ 
   ├❧ _${usedPrefix}dapk2 *<url>*_
   ├❧ _${usedPrefix}xnxxdl *<url>*_ (🔞)
-  ├❧ _${usedPrefix}xvideosdl *<url>*_ (🔞)
+  ├❧ _${usedPrefix}.بين
   ╰───── • ◆ • ─────╯
 
  ${tradutor.texto1[16]}
@@ -556,7 +556,7 @@ const fkontak = { key: { participants:"0@s.whatsapp.net", "remoteJid": "status@b
     conn.reply(m.chat, tradutor.texto1[29], m);
   }
 };
-handler.command = /^(menu|menú|memu|memú|help|info|comandos|allmenu|2help|menu1.2|ayuda|commands|commandos|cmd)$/i;
+handler.command = /^(menu|مهام|اوامر|help|info|comandos|allmenu|2help|menu1.2|ayuda|commands|commandos|cmd)$/i;
 handler.exp = 50;
 handler.fail = null;
 export default handler;
