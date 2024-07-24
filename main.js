@@ -203,7 +203,7 @@ rl.close()
 
 conn.isInit = false;
 conn.well = false;
-conn.logger.info(`[ ℹ️ ] Cargando...\n`);
+conn.logger.info(`[ ℹ️ ] Cargando....\n`);
 
 if (!opts['test']) {
   if (global.db) {
