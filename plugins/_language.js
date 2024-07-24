@@ -46,7 +46,7 @@ const handler = async (m, { args, usedPrefix, command, isAdmin }) => {
 
             }else if (sigla === 'ar') {
                 global.db.data.users[m.sender].language = 'ar'
-                m.reply("[ ✅ ] ذا ميستيك - بوت\n\n*—◉* اللغة مضبوطة على العربية 🇸🇦")
+                m.reply("[ ✅ ] 𝙂𝙊𝙅𝙊-𝘽𝙊𝙏 - بوت\n\n*—◉* اللغة مضبوطة على العربية 🇸🇦")
 
             }else {
 
