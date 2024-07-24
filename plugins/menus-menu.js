@@ -17,7 +17,7 @@ const handler = async (m, { conn, usedPrefix, usedPrefix: _p, __dirname, text, i
     // let vn = './media/menu.mp3'
     const img = './Menu2.jpg';
     const d = new Date(new Date + 3600000);
-    const locale = 'es-ES';
+    const locale = 'ar-AR';
     const week = d.toLocaleDateString(locale, { weekday: 'long' });
     const date = d.toLocaleDateString(locale, { day: '2-digit', month: '2-digit', year: 'numeric' });
     const _uptime = process.uptime() * 1000;
@@ -176,8 +176,8 @@ ${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')
   ${tradutor.texto1[15]}
 
   ╭───── • ◆ • ─────╮
-  ├❧ _${usedPrefix}play *<txt>*_
-  ├❧ _${usedPrefix}play2 *<txt>*_
+  ├❧ _${usedPrefix}اغنيه *<txt>*_
+  ├❧ _${usedPrefix}فديو *<txt>*_
   ├❧ _${usedPrefix}play.1 *<txt>*_
   ├❧ _${usedPrefix}play.2 *<txt>*_
   ├❧ _${usedPrefix}playdoc *<txt>*_
@@ -193,11 +193,11 @@ ${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')
   ├❧ _${usedPrefix}facebook *<url>*_
   ├❧ _${usedPrefix}instagram *<url>*_
   ├❧ _${usedPrefix}igstory *<usr>*_
-  ├❧ _${usedPrefix}tiktok *<url>*_
+  ├❧ _${usedPrefix}تيك *<link>*_
   ├❧ _${usedPrefix}tiktokimg *<url>*_
   ├❧ _${usedPrefix}pptiktok *<usr>*_
   ├❧ _${usedPrefix}mediafire *<url>*_ 
-  ├❧ _${usedPrefix}pinterest *<txt>*_
+  ├❧ _${usedPrefix}بين *<txt>*_
   ├❧ _${usedPrefix}gitclone *<url>*_
   ├❧ _${usedPrefix}gdrive *<url>*_
   ├❧ _${usedPrefix}twitter *<url>*_
@@ -207,7 +207,7 @@ ${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')
   ├❧ _${usedPrefix}wallpaper *<txt>*_ 
   ├❧ _${usedPrefix}dapk2 *<url>*_
   ├❧ _${usedPrefix}xnxxdl *<url>*_ (🔞)
-  ├❧ _${usedPrefix}.بين
+  ├❧ _${usedPrefix}.بوت
   ╰───── • ◆ • ─────╯
 
  ${tradutor.texto1[16]}
@@ -362,7 +362,7 @@ ${tradutor.texto1[9]} ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')
   
   ╭───── • ◆ • ─────╮
   ├❧ _${usedPrefix}inspect *<wagc_url>*_
-  ├❧ _${usedPrefix}chatgpt *<txt>*_
+  ├❧ _${usedPrefix}بوت *<نص>*_
   ├❧ _${usedPrefix}delchatgpt_
   ├❧ _${usedPrefix}gptvoz *<txt>*_
   ├❧ _${usedPrefix}dall-e *<txt>*_
