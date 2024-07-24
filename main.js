@@ -203,7 +203,7 @@ rl.close()
 
 conn.isInit = false;
 conn.well = false;
-conn.logger.info(`[ ℹ️ ] Cargando....\n`);
+conn.logger.info(`[ ℹ️ ] استني....\n`);
 
 if (!opts['test']) {
   if (global.db) {
@@ -301,7 +301,7 @@ unlinkSync(`./jadibts/${directorio}/${fileInDir}`)
 })
 if (SBprekey.length === 0) return; //console.log(chalk.cyanBright(`=> No hay archivos por eliminar.`))
 } catch (err) {
-console.log(chalk.bold.red(`[ ℹ️ ] Algo salio mal durante la eliminación, archivos no eliminados`))
+console.log(chalk.bold.red(`[ ℹ️ ] حدث خطا ما اثناء الحذف والملق متحذفش 🙂`))
 }}
 
 function purgeOldFiles() {
@@ -335,7 +335,7 @@ async function connectionUpdate(update) {
     await global.reloadHandler(true).catch(console.error);
     //console.log(await global.reloadHandler(true).catch(console.error));
     global.timestamp.connect = new Date;
-  }
+  }ج
   if (global.db.data == null) loadDatabase();
 if (update.qr != 0 && update.qr != undefined || methodCodeQR) {
 if (opcion == '1' || methodCodeQR) {
