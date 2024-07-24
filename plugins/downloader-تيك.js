@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 import fs from 'fs';
 
 let handler = async (m, { conn, usedPrefix, args, command, text }) => {
-  if (!text) throw `*⌬┇━───╌ •⤣⚡⤤• ──╌─━┇⌬*\n*يرجى استخدام الأمر مع رابط فيديو من تيك توك*\nمثال: ${usedPrefix + command} https://vt.tiktok.com/ZSY7P6j5Q/\n*❐━═⏣⊰𝙂𝙊𝙅𝙊-𝘽𝙊𝙏⊱⏣═━❐*`;
+  if (!text) throw `*⌬┇━───╌ •⤣⚡⤤• ──╌─━┇⌬*\n*يرجى استخدام الأمر مع رابط فيديو من تيك توك*\nمثال: ${usedPrefix + command} https://vt.tiktok.com/ZSY7P6j5Q/\n*❐━═⏣⊰𝐆𝐎𝐉𝐎⚡𝐁𝐎𝐓⊱⏣═━❐*`;
     ('⏳');
 
   try {
