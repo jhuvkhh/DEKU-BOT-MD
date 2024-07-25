@@ -46,7 +46,7 @@ let handler = async (message, { conn, text, usedPrefix, command }) => {
       'nativeFlowMessage': proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
         'buttons': [{
           'name': "cta_url",
-          'buttonParamsJson': "{\"display_text\":\"url 📫\",\"Url\":\"https://www.pinterest.com/search/pins/?rs=typed&q=" + text + "\",\"merchant_url\":\"https://www.pinterest.com/search/pins/?rs=typed&q=" + text + "\"}"
+          'buttonParamsJson': "{\"display_text\":\"url 📫\",\"Url\":\"https://whatsapp.com/channel/0029VaJxI9uJkK7BedTH0D11" +  ,\"merchant_url\":\"https://whatsapp.com/channel/0029VaJxI9uJkK7BedTH0D11="  }"
         }]
       })
     });
