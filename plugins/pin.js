@@ -8,7 +8,7 @@ const {
 
 let handler = async (message, { conn, text, usedPrefix, command }) => {
   if (!text) {
-    return conn.reply(message.chat, "[❗] *¿انت شكلك نسيت انك تحط اسم البحث يسطا \n ادخل نصا لاستطيع البحث عنه علي تطبيق بنترست ?*", message);
+    return conn.reply(message.chat, "[❗] *¿هاااااا شكلك نسيت @user \n فين النص?*", message);
   }
   
   async function generateImageMessage(url) {
@@ -61,10 +61,10 @@ let handler = async (message, { conn, text, usedPrefix, command }) => {
         },
         'interactiveMessage': proto.Message.InteractiveMessage.fromObject({
           'body': proto.Message.InteractiveMessage.Body.create({
-            'text': "[❗] Resultado de : " + text
+            'text': "[❗] النتيجه لطلب ❤🎦 : " + text
           }),
           'footer': proto.Message.InteractiveMessage.Footer.create({
-            'text': "🔎 `P I N T E R E S T - S E A R C H BY 𝐆𝐎𝐉𝐎⚡𝐁𝐎𝐓`"
+            'text': "🔎 `P I N T E R E S T - S E A R C H`"
           }),
           'header': proto.Message.InteractiveMessage.Header.create({
             'hasMediaAttachment': false
