@@ -46,7 +46,7 @@ const handler = async (m, { args, usedPrefix, command, isAdmin }) => {
 
             }else if (sigla === 'ar') {
                 global.db.data.users[m.sender].language = 'ar'
-                m.reply("[ ✅ ] 𝙂𝙊𝙅𝙊-𝘽𝙊𝙏 - بوت\n\n*—◉* اللغة مضبوطة على العربية 🇸🇦")
+                m.reply("[ ✅ ] 𝐆𝐎𝐉𝐎⚡𝐁𝐎𝐓- بوت\n\n*—◉* اللغة مضبوطة على العربية 🇸🇦")
 
             }else {
 
@@ -114,8 +114,8 @@ ${tradutor.texto2[1]}
         }
         // Fim 
     } catch (error) {
-        global.db.data.users[m.sender].language = 'es'
-        global.db.data.chats[m.chat].language = 'es'
+        global.db.data.users[m.sender].language = 'ar'
+        global.db.data.chats[m.chat].language = 'ar'
         m.reply(`*[ERROR]* -  _Por defecto el idioma estaba configurado en español._
                 \`\`\`contacta a los creadores del bot\`\`\` `)
     }
@@ -125,6 +125,6 @@ ${tradutor.texto2[1]}
 
 
 
-handler.command = /^(lang||langgroup)$/i;
+handler.command = /^(لغه||langgroup)$/i;
 
 export default handler
