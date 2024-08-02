@@ -8,7 +8,7 @@ const {
 
 let handler = async (message, { conn, text, usedPrefix, command }) => {
   if (!text) {
-    return conn.reply(message.chat, "[❗] *¿انت شكلك نسيت انك تحط اسم البحث يسطا \n ادخل نصا لاستطيع البحث عنه علي تطبيق بنترست ?*", message);
+    return conn.reply(message.chat, "[❗] *شكلك نسيت تحط نص user@ \n ادخل نصا لاستطيع البحث علي بنترست?*", message);
   }
   
   async function generateImageMessage(url) {
@@ -46,7 +46,7 @@ let handler = async (message, { conn, text, usedPrefix, command }) => {
       'nativeFlowMessage': proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
         'buttons': [{
           'name': "cta_url",
-          'buttonParamsJson': "{\"display_text\":\"url 📫\",\"Url\":\"https://whatsapp.com/channel/0029VaJxI9uJkK7BedTH0D11"  }"
+          'buttonParamsJson': "{\"display_text\":\"url 📫\",\"Url\":\"https://www.pinterest.com/search/pins/?rs=typed&q=" + text + "\",\"merchant_url\":\"https://www.pinterest.com/search/pins/?rs=typed&q=" + text + "\"}"
         }]
       })
     });
@@ -61,10 +61,10 @@ let handler = async (message, { conn, text, usedPrefix, command }) => {
         },
         'interactiveMessage': proto.Message.InteractiveMessage.fromObject({
           'body': proto.Message.InteractiveMessage.Body.create({
-            'text': "[❗] Resultado de : " + text
+            'text': "[❗] النتيجه لي ❤🎦 : " + text
           }),
           'footer': proto.Message.InteractiveMessage.Footer.create({
-            'text': "🔎 `P I N T E R E S T - S E A R C H BY 𝐆𝐎𝐉𝐎⚡𝐁𝐎𝐓`"
+            'text': "🔎 `P I N T E R E S T - S E A R C H`"
           }),
           'header': proto.Message.InteractiveMessage.Header.create({
             'hasMediaAttachment': false
