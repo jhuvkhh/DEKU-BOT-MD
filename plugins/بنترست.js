@@ -32,7 +32,7 @@ let handler = async (message, { conn, text, usedPrefix, command }) => {
   for (let imageUrl of selectedImages) {
     results.push({
       'body': proto.Message.InteractiveMessage.Body.fromObject({
-        'text': "Imagen -" + (" " + imageCount++)
+        'text': "Image -" + (" " + imageCount++)
       }),
       'footer': proto.Message.InteractiveMessage.Footer.fromObject({
         'text': "𝐆𝐎𝐉𝐎⚡𝐁𝐎𝐓"
@@ -45,7 +45,7 @@ let handler = async (message, { conn, text, usedPrefix, command }) => {
       'nativeFlowMessage': proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
         'buttons': [{
           'name': "cta_url",
-          'buttonParamsJson': "{\"display_text\":\"url رابط القناه 📫\",\"Url\":\"https://whatsapp.com/channel/0029VakGs0BDeONEB6GKAa09\"}"
+          'buttonParamsJson': "{\"display_text\":\"Visit Channel 📫\",\"Url\":\"https://whatsapp.com/channel/0029VakGs0BDeONEB6GKAa09\"}"
         }]
       })
     });
