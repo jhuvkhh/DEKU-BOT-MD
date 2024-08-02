@@ -13,12 +13,14 @@ let handler = async (message, { conn, text, usedPrefix, command }) => {
 
   async function generateVideoMessage(url) {
     try {
-      const { data } = await axios.get(`https://bk9.fun/download/ytmp4?url=${url}`);
-      if (!data || !data.url) {
-        throw new Error('فشل في الحصول على رابط الفيديو');
-      }
-      const videoUrl = data.url;
-      const { videoMessage } = await generateWAMessageContent({ 'video': { 'url': videoUrl } }, { 'upload': conn.waUploadToServer });
+      // قم بتنزيل الفيديو بصيغة MP4
+      const response = await axios.get(`https://bk9.fun/download/ytmp4?url=${url}`, { responseType: 'arraybuffer' });
+      const videoBuffer = response.data;
+      
+      const { videoMessage } = await generateWAMessageContent({
+        video: { url: 'data:video/mp4;base64,' + Buffer.from(videoBuffer).toString('base64') }
+      }, { 'upload': conn.waUploadToServer });
+      
       return videoMessage;
     } catch (error) {
       console.error("خطأ في توليد رسالة الفيديو:", error);
@@ -47,7 +49,7 @@ let handler = async (message, { conn, text, usedPrefix, command }) => {
     if (videoMessage) {
       results.push({
         'body': proto.Message.InteractiveMessage.Body.fromObject({
-          'text': "فيديو -" + (" " + videoCount++)
+          'text': "فيديو - " + videoCount++
         }),
         'footer': proto.Message.InteractiveMessage.Footer.fromObject({
           'text': "𝐆𝐎𝐉𝐎⚡𝐁𝐎𝐓"
@@ -60,7 +62,7 @@ let handler = async (message, { conn, text, usedPrefix, command }) => {
         'nativeFlowMessage': proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
           'buttons': [{
             'name': "cta_url",
-            'buttonParamsJson': "{\"display_text\":\"url 📫\",\"Url\":\"https://whatsapp.com/channel/0029VakGs0BDeONEB6GKAa09\"}"
+            'buttonParamsJson': "{\"display_text\":\"قناة الواتس\",\"Url\":\"https://whatsapp.com/channel/0029VakGs0BDeONEB6GKAa09\"}"
           }]
         })
       });
