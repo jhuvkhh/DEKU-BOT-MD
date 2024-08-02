@@ -1,4 +1,3 @@
-/////https://whatsapp.com/channel/0029VakGs0BDeONEB6GKAa09
 import axios from 'axios';
 const {
   generateWAMessageContent,
@@ -36,7 +35,7 @@ let handler = async (message, { conn, text, usedPrefix, command }) => {
         'text': "Imagen -" + (" " + imageCount++)
       }),
       'footer': proto.Message.InteractiveMessage.Footer.fromObject({
-        'text': "𝐆𝐎𝐉𝐎⚡𝐁𝐎𝐓" // ضع العلامة المائية هنا
+        'text': "𝐆𝐎𝐉𝐎⚡𝐁𝐎𝐓"
       }),
       'header': proto.Message.InteractiveMessage.Header.fromObject({
         'title': '',
@@ -46,7 +45,7 @@ let handler = async (message, { conn, text, usedPrefix, command }) => {
       'nativeFlowMessage': proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
         'buttons': [{
           'name': "cta_url",
-          'buttonParamsJson': "{\"display_text\":\"url 📫\",\"Url\":\"https://whatsapp.com/channel/0029VaJxI9uJkK7BedTH0D11"}"
+          'buttonParamsJson': "{\"display_text\":\"url رابط القناه 📫\",\"Url\":\"https://whatsapp.com/channel/0029VakGs0BDeONEB6GKAa09\"}"
         }]
       })
     });
