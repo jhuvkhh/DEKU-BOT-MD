@@ -1,5 +1,7 @@
 import axios from 'axios';
 import yts from 'yt-search';
+import { ytmp44 } from '@bochilteam/scraper'; // استخدام مكتبة تنزيل الفيديو
+
 const {
   generateWAMessageContent,
   generateWAMessageFromContent,
@@ -13,12 +15,22 @@ let handler = async (message, { conn, text, usedPrefix, command }) => {
 
   async function generateVideoMessage(url) {
     try {
-      // قم بتنزيل الفيديو بصيغة MP4
-      const response = await axios.get(`https://bk9.fun/download/ytmp4?url=${url}`, { responseType: 'arraybuffer' });
-      const videoBuffer = response.data;
-      
+      // قم بتنزيل الفيديو بصيغة MP4 باستخدام ytmp44
+      const { status, resultados, error } = await ytmp44(url);
+      if (!status) {
+        throw new Error(error);
+      }
+      const videoUrl = resultados.descargar;
+      if (!videoUrl) {
+        throw new Error('فشل في الحصول على رابط الفيديو');
+      }
+
+      // قم بتحميل الفيديو من الرابط
+      const videoBuffer = await getBuffer(videoUrl);
+
+      // قم بتحميل الفيديو إلى الخادم واستخدامه في الرسالة
       const { videoMessage } = await generateWAMessageContent({
-        video: { url: 'data:video/mp4;base64,' + Buffer.from(videoBuffer).toString('base64') }
+        video: { url: videoUrl }
       }, { 'upload': conn.waUploadToServer });
       
       return videoMessage;
@@ -38,9 +50,22 @@ let handler = async (message, { conn, text, usedPrefix, command }) => {
     }
   }
 
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+
+  async function getBuffer(url) {
+    const response = await axios.get(url, { responseType: 'arraybuffer' });
+    return response.data;
+  }
+
   let results = [];
   let videos = await searchYouTube(text);
   let selectedVideos = videos.slice(0, 5); // اختيار أول 5 فيديوهات
+  shuffleArray(selectedVideos); // خلط الفيديوهات
   let videoCount = 1;
 
   for (let video of selectedVideos) {
@@ -84,7 +109,7 @@ let handler = async (message, { conn, text, usedPrefix, command }) => {
         },
         'interactiveMessage': proto.Message.InteractiveMessage.fromObject({
           'body': proto.Message.InteractiveMessage.Body.create({
-            'text': "[❗] النتائج لي ❤🎦: " + text
+            'text': "[❗] النتائج لـ ❤🎦: " + text
           }),
           'footer': proto.Message.InteractiveMessage.Footer.create({
             'text': "🔎 `Y O U T U B E - S E A R C H`"
