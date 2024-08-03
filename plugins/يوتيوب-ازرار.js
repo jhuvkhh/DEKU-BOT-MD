@@ -1,8 +1,4 @@
-import fetch from 'node-fetch';
-import ytdl from 'ytdl-core';
-import fs from 'fs';
-import yts from 'yt-search';
-
+import ytSearch from 'yt-search';
 const {
   generateWAMessageContent,
   generateWAMessageFromContent,
@@ -14,44 +10,82 @@ let handler = async (message, { conn, text, usedPrefix, command }) => {
     return conn.reply(message.chat, "[❗] *شكلك نسيت تحط نص user@ \n ادخل نصا لاستطيع البحث علي يوتيوب?*", message);
   }
 
-  async function downloadVideo(url) {
-    const videoPath = `/tmp/video.mp4`;
-    return new Promise((resolve, reject) => {
-      ytdl(url, { quality: 'highest' })
-        .pipe(fs.createWriteStream(videoPath))
-        .on('finish', () => resolve(videoPath))
-        .on('error', reject);
+  async function generateVideoMessage(url, title, thumbnail) {
+    const { imageMessage } = await generateWAMessageContent({ 'image': { 'url': thumbnail } }, { 'upload': conn.waUploadToServer });
+    return {
+      title,
+      url,
+      imageMessage
+    };
+  }
+
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+  }
+
+  let results = [];
+  let searchResults = await ytSearch(text);
+  let videos = searchResults.videos.slice(0, 5);
+
+  shuffleArray(videos);
+
+  for (let video of videos) {
+    let videoMessage = await generateVideoMessage(video.url, video.title, video.thumbnail);
+    results.push({
+      'body': proto.Message.InteractiveMessage.Body.fromObject({
+        'text': videoMessage.title
+      }),
+      'footer': proto.Message.InteractiveMessage.Footer.fromObject({
+        'text': "𝐆𝐎𝐉𝐎⚡𝐁𝐎𝐓"
+      }),
+      'header': proto.Message.InteractiveMessage.Header.fromObject({
+        'title': '',
+        'hasMediaAttachment': true,
+        'imageMessage': videoMessage.imageMessage
+      }),
+      'nativeFlowMessage': proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
+        'buttons': [{
+          'name': "cta_url",
+          'buttonParamsJson': JSON.stringify({
+            "display_text": "Watch Video 📹",
+            "url": videoMessage.url
+          })
+        }]
+      })
     });
   }
 
-  let searchResults = await yts(text);
-  let videos = searchResults.videos.slice(0, 1); // اختر فيديو واحد فقط
-
-  for (let video of videos) {
-    try {
-      let videoPath = await downloadVideo(video.url);
-      const videoMessage = await generateWAMessageContent({ video: { url: videoPath } }, { upload: conn.waUploadToServer });
-
-      const messageContent = generateWAMessageFromContent(message.chat, {
-        viewOnceMessage: {
-          message: {
-            messageContextInfo: {
-              deviceListMetadata: {},
-              deviceListMetadataVersion: 2
-            },
-            videoMessage: videoMessage.videoMessage
-          }
-        }
-      }, {
-        quoted: message
-      });
-
-      await conn.relayMessage(message.chat, messageContent.message, { messageId: messageContent.key.id });
-    } catch (error) {
-      console.error('Error downloading or sending video:', error);
-      await conn.reply(message.chat, "حدث خطأ أثناء تنزيل الفيديو. حاول مرة أخرى لاحقًا.", message);
+  const messageContent = generateWAMessageFromContent(message.chat, proto.Message.fromObject({
+    'viewOnceMessage': {
+      'message': {
+        'messageContextInfo': {
+          'deviceListMetadata': {},
+          'deviceListMetadataVersion': 2
+        },
+        'interactiveMessage': proto.Message.InteractiveMessage.fromObject({
+          'body': proto.Message.InteractiveMessage.Body.fromObject({
+            'text': "[❗] النتيجه لي ❤🎦 : " + text
+          }),
+          'footer': proto.Message.InteractiveMessage.Footer.fromObject({
+            'text': "🔎 `Y O U T U B E - S E A R C H`"
+          }),
+          'header': proto.Message.InteractiveMessage.Header.fromObject({
+            'hasMediaAttachment': false
+          }),
+          'carouselMessage': proto.Message.InteractiveMessage.CarouselMessage.fromObject({
+            'cards': results
+          })
+        })
+      }
     }
-  }
+  }), {
+    'quoted': message
+  });
+
+  await conn.relayMessage(message.chat, messageContent.message, { 'messageId': messageContent.key.id });
 };
 
 handler.help = ["youtube"];
