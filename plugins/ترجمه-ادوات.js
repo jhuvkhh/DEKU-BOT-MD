@@ -4,17 +4,11 @@ const tld = 'cn'
 
 let handler = async (m, { args, usedPrefix, command }) => {
     let err = `
-𝐆𝐎𝐉𝐎⚡𝐁𝐎𝐓 \n https://whatsapp.com/channel/0029VaJxI9uJkK7BedTH0D11
-         
-
-*امثله الترجمه*
-
+𝐆𝐎𝐉𝐎⚡𝐁𝐎𝐓 \n قناه البوت https://whatsapp.com/channel/0029VaJxI9uJkK7BedTH0D11
+    
+*امثله الترجمه* 😍
 .ترجم gojo satoro
-.ترجم aha
-  
-
-
-https://cloud.google.com/translate/docs/languages
+.ترجم hallo beach
 `.trim()
 
     let lang = args[0]
