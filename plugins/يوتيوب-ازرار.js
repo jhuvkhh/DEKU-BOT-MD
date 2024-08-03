@@ -1,10 +1,7 @@
 import fetch from 'node-fetch';
-import axios from 'axios';
-import { youtubedl, youtubedlv2 } from '@bochilteam/scraper';
+import ytdl from 'ytdl-core';
 import fs from 'fs';
 import yts from 'yt-search';
-import ytmp33 from '../lib/ytmp33.js';
-import ytmp44 from '../lib/ytmp44.js';
 
 const {
   generateWAMessageContent,
@@ -18,32 +15,13 @@ let handler = async (message, { conn, text, usedPrefix, command }) => {
   }
 
   async function downloadVideo(url) {
-    try {
-      const result = await youtubedl(url);
-      const format = result.formats.find(f => f.qualityLabel === '360p' && f.mimeType.includes('mp4'));
-      if (!format) {
-        throw new Error('لم يتم العثور على التنسيق المطلوب');
-      }
-      const videoUrl = format.url;
-      const response = await axios({
-        url: videoUrl,
-        method: 'GET',
-        responseType: 'stream'
-      });
-
-      const videoPath = `/tmp/video.mp4`;
-      const writer = fs.createWriteStream(videoPath);
-
-      response.data.pipe(writer);
-
-      return new Promise((resolve, reject) => {
-        writer.on('finish', () => resolve(videoPath));
-        writer.on('error', reject);
-      });
-    } catch (error) {
-      console.error('Error downloading video:', error);
-      throw error;
-    }
+    const videoPath = `/tmp/video.mp4`;
+    return new Promise((resolve, reject) => {
+      ytdl(url, { quality: 'highest' })
+        .pipe(fs.createWriteStream(videoPath))
+        .on('finish', () => resolve(videoPath))
+        .on('error', reject);
+    });
   }
 
   let searchResults = await yts(text);
@@ -70,6 +48,7 @@ let handler = async (message, { conn, text, usedPrefix, command }) => {
 
       await conn.relayMessage(message.chat, messageContent.message, { messageId: messageContent.key.id });
     } catch (error) {
+      console.error('Error downloading or sending video:', error);
       await conn.reply(message.chat, "حدث خطأ أثناء تنزيل الفيديو. حاول مرة أخرى لاحقًا.", message);
     }
   }
