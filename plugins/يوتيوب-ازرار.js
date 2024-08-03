@@ -49,13 +49,16 @@ let handler = async (message, { conn, text, usedPrefix, command }) => {
       'nativeFlowMessage': proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
         'buttons': [{
           'name': "cta_url",
-          'buttonParamsJson': `{\"display_text\":\"Watch Video 📹\",\"Url\":\"${videoMessage.url}\"}`
+          'buttonParamsJson': JSON.stringify({
+            "display_text": "Watch Video 📹",
+            "url": videoMessage.url
+          })
         }]
       })
     });
   }
 
-  const messageContent = generateWAMessageFromContent(message.chat, {
+  const messageContent = generateWAMessageFromContent(message.chat, proto.Message.fromObject({
     'viewOnceMessage': {
       'message': {
         'messageContextInfo': {
@@ -63,22 +66,22 @@ let handler = async (message, { conn, text, usedPrefix, command }) => {
           'deviceListMetadataVersion': 2
         },
         'interactiveMessage': proto.Message.InteractiveMessage.fromObject({
-          'body': proto.Message.InteractiveMessage.Body.create({
+          'body': proto.Message.InteractiveMessage.Body.fromObject({
             'text': "[❗] النتيجه لي ❤🎦 : " + text
           }),
-          'footer': proto.Message.InteractiveMessage.Footer.create({
+          'footer': proto.Message.InteractiveMessage.Footer.fromObject({
             'text': "🔎 `Y O U T U B E - S E A R C H`"
           }),
-          'header': proto.Message.InteractiveMessage.Header.create({
+          'header': proto.Message.InteractiveMessage.Header.fromObject({
             'hasMediaAttachment': false
           }),
           'carouselMessage': proto.Message.InteractiveMessage.CarouselMessage.fromObject({
-            'cards': [...results]
+            'cards': results
           })
         })
       }
     }
-  }, {
+  }), {
     'quoted': message
   });
 
