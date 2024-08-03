@@ -18,46 +18,60 @@ let handler = async (message, { conn, text, usedPrefix, command }) => {
   }
 
   async function downloadVideo(url) {
-    const result = await youtubedl(url);
-    const format = result.formats.find(f => f.qualityLabel === '360p' && f.mimeType.includes('mp4'));
-    const videoUrl = format.url;
-    const response = await axios({
-      url: videoUrl,
-      method: 'GET',
-      responseType: 'stream'
-    });
+    try {
+      const result = await youtubedl(url);
+      const format = result.formats.find(f => f.qualityLabel === '360p' && f.mimeType.includes('mp4'));
+      if (!format) {
+        throw new Error('لم يتم العثور على التنسيق المطلوب');
+      }
+      const videoUrl = format.url;
+      const response = await axios({
+        url: videoUrl,
+        method: 'GET',
+        responseType: 'stream'
+      });
 
-    const videoPath = `/tmp/video.mp4`;
-    response.data.pipe(fs.createWriteStream(videoPath));
+      const videoPath = `/tmp/video.mp4`;
+      const writer = fs.createWriteStream(videoPath);
 
-    return new Promise((resolve, reject) => {
-      response.data.on('end', () => resolve(videoPath));
-      response.data.on('error', reject);
-    });
+      response.data.pipe(writer);
+
+      return new Promise((resolve, reject) => {
+        writer.on('finish', () => resolve(videoPath));
+        writer.on('error', reject);
+      });
+    } catch (error) {
+      console.error('Error downloading video:', error);
+      throw error;
+    }
   }
 
   let searchResults = await yts(text);
   let videos = searchResults.videos.slice(0, 1); // اختر فيديو واحد فقط
 
   for (let video of videos) {
-    let videoPath = await downloadVideo(video.url);
-    const videoMessage = await generateWAMessageContent({ video: { url: videoPath } }, { upload: conn.waUploadToServer });
+    try {
+      let videoPath = await downloadVideo(video.url);
+      const videoMessage = await generateWAMessageContent({ video: { url: videoPath } }, { upload: conn.waUploadToServer });
 
-    const messageContent = generateWAMessageFromContent(message.chat, {
-      viewOnceMessage: {
-        message: {
-          messageContextInfo: {
-            deviceListMetadata: {},
-            deviceListMetadataVersion: 2
-          },
-          videoMessage: videoMessage.videoMessage
+      const messageContent = generateWAMessageFromContent(message.chat, {
+        viewOnceMessage: {
+          message: {
+            messageContextInfo: {
+              deviceListMetadata: {},
+              deviceListMetadataVersion: 2
+            },
+            videoMessage: videoMessage.videoMessage
+          }
         }
-      }
-    }, {
-      quoted: message
-    });
+      }, {
+        quoted: message
+      });
 
-    await conn.relayMessage(message.chat, messageContent.message, { messageId: messageContent.key.id });
+      await conn.relayMessage(message.chat, messageContent.message, { messageId: messageContent.key.id });
+    } catch (error) {
+      await conn.reply(message.chat, "حدث خطأ أثناء تنزيل الفيديو. حاول مرة أخرى لاحقًا.", message);
+    }
   }
 };
 
