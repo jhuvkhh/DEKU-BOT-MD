@@ -1,4 +1,11 @@
-import ytSearch from 'yt-search';
+import fetch from 'node-fetch';
+import axios from 'axios';
+import { youtubedl, youtubedlv2 } from '@bochilteam/scraper';
+import fs from 'fs';
+import yts from 'yt-search';
+import ytmp33 from '../lib/ytmp33.js';
+import ytmp44 from '../lib/ytmp44.js';
+
 const {
   generateWAMessageContent,
   generateWAMessageFromContent,
@@ -10,82 +17,48 @@ let handler = async (message, { conn, text, usedPrefix, command }) => {
     return conn.reply(message.chat, "[❗] *شكلك نسيت تحط نص user@ \n ادخل نصا لاستطيع البحث علي يوتيوب?*", message);
   }
 
-  async function generateVideoMessage(url, title, thumbnail) {
-    const { imageMessage } = await generateWAMessageContent({ 'image': { 'url': thumbnail } }, { 'upload': conn.waUploadToServer });
-    return {
-      title,
-      url,
-      imageMessage
-    };
-  }
+  async function downloadVideo(url) {
+    const result = await youtubedl(url);
+    const format = result.formats.find(f => f.qualityLabel === '360p' && f.mimeType.includes('mp4'));
+    const videoUrl = format.url;
+    const response = await axios({
+      url: videoUrl,
+      method: 'GET',
+      responseType: 'stream'
+    });
 
-  function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-  }
+    const videoPath = `/tmp/video.mp4`;
+    response.data.pipe(fs.createWriteStream(videoPath));
 
-  let results = [];
-  let searchResults = await ytSearch(text);
-  let videos = searchResults.videos.slice(0, 5);
-
-  shuffleArray(videos);
-
-  for (let video of videos) {
-    let videoMessage = await generateVideoMessage(video.url, video.title, video.thumbnail);
-    results.push({
-      'body': proto.Message.InteractiveMessage.Body.fromObject({
-        'text': videoMessage.title
-      }),
-      'footer': proto.Message.InteractiveMessage.Footer.fromObject({
-        'text': "𝐆𝐎𝐉𝐎⚡𝐁𝐎𝐓"
-      }),
-      'header': proto.Message.InteractiveMessage.Header.fromObject({
-        'title': '',
-        'hasMediaAttachment': true,
-        'imageMessage': videoMessage.imageMessage
-      }),
-      'nativeFlowMessage': proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({
-        'buttons': [{
-          'name': "cta_url",
-          'buttonParamsJson': JSON.stringify({
-            "display_text": "Watch Video 📹",
-            "url": videoMessage.url
-          })
-        }]
-      })
+    return new Promise((resolve, reject) => {
+      response.data.on('end', () => resolve(videoPath));
+      response.data.on('error', reject);
     });
   }
 
-  const messageContent = generateWAMessageFromContent(message.chat, proto.Message.fromObject({
-    'viewOnceMessage': {
-      'message': {
-        'messageContextInfo': {
-          'deviceListMetadata': {},
-          'deviceListMetadataVersion': 2
-        },
-        'interactiveMessage': proto.Message.InteractiveMessage.fromObject({
-          'body': proto.Message.InteractiveMessage.Body.fromObject({
-            'text': "[❗] النتيجه لي ❤🎦 : " + text
-          }),
-          'footer': proto.Message.InteractiveMessage.Footer.fromObject({
-            'text': "🔎 `Y O U T U B E - S E A R C H`"
-          }),
-          'header': proto.Message.InteractiveMessage.Header.fromObject({
-            'hasMediaAttachment': false
-          }),
-          'carouselMessage': proto.Message.InteractiveMessage.CarouselMessage.fromObject({
-            'cards': results
-          })
-        })
-      }
-    }
-  }), {
-    'quoted': message
-  });
+  let searchResults = await yts(text);
+  let videos = searchResults.videos.slice(0, 1); // اختر فيديو واحد فقط
 
-  await conn.relayMessage(message.chat, messageContent.message, { 'messageId': messageContent.key.id });
+  for (let video of videos) {
+    let videoPath = await downloadVideo(video.url);
+    const videoMessage = await generateWAMessageContent({ video: { url: videoPath } }, { upload: conn.waUploadToServer });
+
+    const messageContent = generateWAMessageFromContent(message.chat, {
+      viewOnceMessage: {
+        message: {
+          messageContextInfo: {
+            deviceListMetadata: {},
+            deviceListMetadataVersion: 2
+          },
+          videoMessage: videoMessage.videoMessage
+        }
+      }
+    }, {
+      quoted: message
+    });
+
+    await conn.relayMessage(message.chat, messageContent.message, { messageId: messageContent.key.id });
+  }
 };
 
 handler.help = ["youtube"];
